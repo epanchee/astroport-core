@@ -21,6 +21,7 @@ astroport-governance = { git="https://github.com/astroport-fi/astroport-governan
 
 [patch."https://github.com/astroport-fi/astroport-core.git"]
 astroport = { path = './packages/astroport' }
+astroport-generator = { path = './contracts/tokenomics/generator' }
 
 [profile.release]
 opt-level = 3

@@ -48,7 +48,7 @@ jobs:
 
       - name: Check locked and free builds
         run: |
-          cargo build && cp Cargo.lock Cargo.lock.free && cargo build --locked && diff Cargo.lock Cargo.lock.free
+          cp Cargo.lock Cargo.lock.locked && cargo build && diff Cargo.lock Cargo.lock.locked
 
 #      - name: Run tests
 #        uses: actions-rs/cargo@v1
