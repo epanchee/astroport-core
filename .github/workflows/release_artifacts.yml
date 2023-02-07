@@ -13,10 +13,16 @@ jobs:
         run: |
           $GITHUB_WORKSPACE/scripts/build_release.sh
           tar -zcvf cosmwasm-artifacts.tar.gz artifacts
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: cosmwasm-artifacts.tar.gz
+          body: ${{steps.github_release.outputs.changelog}}
           token: ${{ secrets.GH_TOKEN }}
         env:
           GITHUB_REPOSITORY: epanchee/astroport-core
