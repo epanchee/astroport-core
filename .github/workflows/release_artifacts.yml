@@ -17,6 +17,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: cosmwasm-artifacts.tar.gz
-          token: ${{ secrets.GH_TOKEN }}
-        env:
-          GITHUB_REPOSITORY: astroport-fi/astroport-core
+          token: ${{ secrets.GITHUB_TOKEN }}
