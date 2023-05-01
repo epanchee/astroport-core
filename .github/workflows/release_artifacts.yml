@@ -14,6 +14,20 @@ jobs:
           $GITHUB_WORKSPACE/scripts/build_release.sh
           tar -zcvf cosmwasm-artifacts.tar.gz artifacts
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: cosmwasm-artifacts.tar.gz
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./cosmwasm-artifacts.tar.gz
+          asset_name: cosmwasm-artifacts.tar.gz
+          asset_content_type: application/tar+gzip
