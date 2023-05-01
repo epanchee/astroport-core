@@ -20,5 +20,3 @@ jobs:
         with:
           files: cosmwasm-artifacts.tar.gz
           token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          GITHUB_REPOSITORY: astroport-fi/astroport-core
