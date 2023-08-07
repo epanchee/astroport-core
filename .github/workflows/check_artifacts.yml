@@ -1,0 +1,36 @@
+name: Check compiled contracts
+on:
+  pull_request:
+
+jobs:
+  check-artifacts-size:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/git/checkouts
+            ~/.cargo/git/db
+            ~/.cargo/registry/cache
+            ~/.cargo/registry/index
+            target
+            artifacts
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build Artifacts
+        run: |
+          $GITHUB_WORKSPACE/scripts/build_release.sh
+      - name: Check Artifacts Size
+        run: |
+          $GITHUB_WORKSPACE/scripts/check_artifacts_size.sh
+
+  cosmwasm-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install cosmwasm-check
+        # Uses --debug for compilation speed
+        run: cargo install --debug --version 1.3.1 cosmwasm-check
+      - name: Cosmwasm check
+        run: cosmwasm-check artifacts/*.wasm --available-capabilities cosmwasm_1_1,injective,iterator,stargate
