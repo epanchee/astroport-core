@@ -28,6 +28,7 @@ jobs:
 
   cosmwasm-check:
     runs-on: ubuntu-latest
+    needs: check-artifacts-size
     steps:
       - name: Install cosmwasm-check
         # Uses --debug for compilation speed

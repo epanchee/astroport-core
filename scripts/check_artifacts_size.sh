@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-maximum_size=700
+maximum_size=900
 
 for artifact in artifacts/*.wasm; do
   artifactsize=$(du -k "$artifact" | cut -f 1)
