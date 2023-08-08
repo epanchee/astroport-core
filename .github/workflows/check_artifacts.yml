@@ -17,7 +17,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/registry/index
             target
-            artifacts
+            $GITHUB_WORKSPACE/artifacts
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Build Artifacts
         run: |
@@ -34,10 +34,10 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
       - name: Restore cached artifacts
-        uses: actions/cache@v2
+        uses: actions/cache/restore@v3
         with:
           path: |
-            artifacts
+            $GITHUB_WORKSPACE/artifacts
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Install cosmwasm-check
         # Uses --debug for compilation speed
