@@ -10,11 +10,22 @@ jobs:
         uses: actions/checkout@v2
       - uses: actions/cache@v3
         with:
-          path: artifacts
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/git/checkouts
+            ~/.cargo/git/db
+            ~/.cargo/registry/cache
+            ~/.cargo/registry/index
+            target
+            artifacts
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Build Artifacts
         run: |
-          $GITHUB_WORKSPACE/scripts/build_release.sh
+          docker run \
+            -v "$GITHUB_WORKSPACE":/code \
+            -v target:/code/target \
+            -v ~/.cargo:/usr/local/cargo \
+            cosmwasm/workspace-optimizer:0.12.13
       - name: Check Artifacts Size
         run: |
           $GITHUB_WORKSPACE/scripts/check_artifacts_size.sh
@@ -23,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-artifacts-size
     steps:
-        # We need this only to get Cargo.lock
+      # We need this only to get Cargo.lock
       - name: Checkout sources
         uses: actions/checkout@v2
       - name: Restore cached artifacts
@@ -35,5 +46,5 @@ jobs:
         # Uses --debug for compilation speed
         run: cargo install --debug --version 1.3.1 cosmwasm-check
       - name: Cosmwasm check
-        run: | 
+        run: |
           cosmwasm-check $GITHUB_WORKSPACE/artifacts/*.wasm --available-capabilities cosmwasm_1_1,injective,iterator,stargate
